@@ -10,6 +10,7 @@ interface CalculatorFieldProps {
   onChange: (value: string) => void;
   placeholder?: string;
   error?: string;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -21,6 +22,11 @@ interface CalculatorFieldProps {
  * A unit-selector dropdown (e.g. switching between V/mV/kV) needs the
  * Select component, which is deliberately deferred until a calculator
  * actually needs unit conversion — see Phase 2 component scope.
+ *
+ * `disabled` is used by calculators (e.g. Power) where the user must
+ * fill exactly N of several fields — the remaining field(s) get
+ * disabled once N are filled, guiding the user rather than just
+ * warning them after the fact.
  */
 export function CalculatorField({
   id,
@@ -30,6 +36,7 @@ export function CalculatorField({
   onChange,
   placeholder,
   error,
+  disabled,
   className,
 }: CalculatorFieldProps) {
   return (
@@ -43,6 +50,7 @@ export function CalculatorField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
+          disabled={disabled}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : undefined}
           className="font-mono"

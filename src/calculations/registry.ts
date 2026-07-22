@@ -1,6 +1,8 @@
 import type { z } from "zod";
 import { calculateOhmsLaw, type OhmsLawInput, type OhmsLawResult } from "./ohms-law";
+import { calculatePower, type PowerInput, type PowerResult } from "./power";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
+import { powerFormSchema } from "@/lib/validation/power";
 import type { CalculationResult } from "./types";
 
 /**
@@ -47,6 +49,14 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     category: "Basic Circuits",
     schema: ohmsLawFormSchema,
     calculate: calculateOhmsLaw,
+  }),
+  defineCalculator<PowerInput, PowerResult>({
+    slug: "power",
+    name: "Electrical Power",
+    description: "Solve for power using P = VI, P = I²R, or P = V²/R.",
+    category: "Basic Circuits",
+    schema: powerFormSchema,
+    calculate: calculatePower,
   }),
 ];
 

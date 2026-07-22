@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { OhmsLawCalculator } from "./ohms-law-calculator";
+import { PowerCalculator } from "./power-calculator";
 
 /**
  * Maps a calculator's slug to its React UI component. Deliberately kept
@@ -8,4 +9,5 @@ import { OhmsLawCalculator } from "./ohms-law-calculator";
  */
 export const calculatorComponents: Record<string, ComponentType> = {
   "ohms-law": OhmsLawCalculator,
+  power: PowerCalculator,
 };
