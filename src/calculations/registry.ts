@@ -1,8 +1,14 @@
 import type { z } from "zod";
 import { calculateOhmsLaw, type OhmsLawInput, type OhmsLawResult } from "./ohms-law";
 import { calculatePower, type PowerInput, type PowerResult } from "./power";
+import {
+  calculateVoltageDivider,
+  type VoltageDividerInput,
+  type VoltageDividerResult,
+} from "./voltage-divider";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
 import { powerFormSchema } from "@/lib/validation/power";
+import { voltageDividerFormSchema } from "@/lib/validation/voltage-divider";
 import type { CalculationResult } from "./types";
 
 /**
@@ -57,6 +63,14 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     category: "Basic Circuits",
     schema: powerFormSchema,
     calculate: calculatePower,
+  }),
+  defineCalculator<VoltageDividerInput, VoltageDividerResult>({
+    slug: "voltage-divider",
+    name: "Voltage Divider",
+    description: "Calculate output voltage across two resistors.",
+    category: "Basic Circuits",
+    schema: voltageDividerFormSchema,
+    calculate: calculateVoltageDivider,
   }),
 ];
 
