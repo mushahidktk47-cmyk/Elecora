@@ -11,10 +11,16 @@ import {
   type SeriesResistanceInput,
   type SeriesResistanceResult,
 } from "./series-resistance";
+import {
+  calculateParallelResistance,
+  type ParallelResistanceInput,
+  type ParallelResistanceResult,
+} from "./parallel-resistance";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
 import { powerFormSchema } from "@/lib/validation/power";
 import { voltageDividerFormSchema } from "@/lib/validation/voltage-divider";
 import { seriesResistanceFormSchema } from "@/lib/validation/series-resistance";
+import { parallelResistanceFormSchema } from "@/lib/validation/parallel-resistance";
 import type { CalculationResult } from "./types";
 
 /**
@@ -85,6 +91,14 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     category: "Basic Circuits",
     schema: seriesResistanceFormSchema,
     calculate: calculateSeriesResistance,
+  }),
+  defineCalculator<ParallelResistanceInput, ParallelResistanceResult>({
+    slug: "parallel-resistance",
+    name: "Parallel Resistance",
+    description: "Combine resistors connected in parallel.",
+    category: "Basic Circuits",
+    schema: parallelResistanceFormSchema,
+    calculate: calculateParallelResistance,
   }),
 ];
 
