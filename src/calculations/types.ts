@@ -6,7 +6,11 @@
  * framework-free registry.
  */
 
-export type CalculationErrorCode = "NEGATIVE_VALUE" | "DIVISION_BY_ZERO" | "INVALID_INPUT";
+export type CalculationErrorCode =
+  | "NEGATIVE_VALUE"
+  | "DIVISION_BY_ZERO"
+  | "ZERO_NOT_ALLOWED"
+  | "INVALID_INPUT";
 
 export interface CalculationSuccess<T> {
   success: true;

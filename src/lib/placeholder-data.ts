@@ -39,9 +39,9 @@ export const popularCalculators: PlaceholderCalculator[] = [
     description: "Decode resistance values from color bands.",
   },
   {
-    name: "Series & Parallel Resistance",
-    slug: "series-parallel-resistance",
-    description: "Combine resistors in series or parallel circuits.",
+    name: "Series Resistance",
+    slug: "series-resistance",
+    description: "Combine resistors connected in series.",
   },
 ];
 

@@ -6,9 +6,15 @@ import {
   type VoltageDividerInput,
   type VoltageDividerResult,
 } from "./voltage-divider";
+import {
+  calculateSeriesResistance,
+  type SeriesResistanceInput,
+  type SeriesResistanceResult,
+} from "./series-resistance";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
 import { powerFormSchema } from "@/lib/validation/power";
 import { voltageDividerFormSchema } from "@/lib/validation/voltage-divider";
+import { seriesResistanceFormSchema } from "@/lib/validation/series-resistance";
 import type { CalculationResult } from "./types";
 
 /**
@@ -71,6 +77,14 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     category: "Basic Circuits",
     schema: voltageDividerFormSchema,
     calculate: calculateVoltageDivider,
+  }),
+  defineCalculator<SeriesResistanceInput, SeriesResistanceResult>({
+    slug: "series-resistance",
+    name: "Series Resistance",
+    description: "Combine resistors connected in series.",
+    category: "Basic Circuits",
+    schema: seriesResistanceFormSchema,
+    calculate: calculateSeriesResistance,
   }),
 ];
 
