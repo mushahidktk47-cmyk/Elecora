@@ -16,11 +16,17 @@ import {
   type ParallelResistanceInput,
   type ParallelResistanceResult,
 } from "./parallel-resistance";
+import {
+  calculateSinglePhasePower,
+  type SinglePhasePowerInput,
+  type SinglePhasePowerResult,
+} from "./single-phase-power";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
 import { powerFormSchema } from "@/lib/validation/power";
 import { voltageDividerFormSchema } from "@/lib/validation/voltage-divider";
 import { seriesResistanceFormSchema } from "@/lib/validation/series-resistance";
 import { parallelResistanceFormSchema } from "@/lib/validation/parallel-resistance";
+import { singlePhasePowerFormSchema } from "@/lib/validation/single-phase-power";
 import type { CalculationResult } from "./types";
 
 /**
@@ -99,6 +105,14 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     category: "Basic Circuits",
     schema: parallelResistanceFormSchema,
     calculate: calculateParallelResistance,
+  }),
+  defineCalculator<SinglePhasePowerInput, SinglePhasePowerResult>({
+    slug: "single-phase-power",
+    name: "1-Phase Power",
+    description: "Calculate real power for single-phase AC systems using RMS values and power factor.",
+    category: "AC Power",
+    schema: singlePhasePowerFormSchema,
+    calculate: calculateSinglePhasePower,
   }),
 ];
 

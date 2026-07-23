@@ -10,6 +10,7 @@ export type CalculationErrorCode =
   | "NEGATIVE_VALUE"
   | "DIVISION_BY_ZERO"
   | "ZERO_NOT_ALLOWED"
+  | "OUT_OF_RANGE"
   | "INVALID_INPUT";
 
 export interface CalculationSuccess<T> {
