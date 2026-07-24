@@ -21,12 +21,18 @@ import {
   type SinglePhasePowerInput,
   type SinglePhasePowerResult,
 } from "./single-phase-power";
+import {
+  calculateThreePhasePower,
+  type ThreePhasePowerInput,
+  type ThreePhasePowerResult,
+} from "./three-phase-power";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
 import { powerFormSchema } from "@/lib/validation/power";
 import { voltageDividerFormSchema } from "@/lib/validation/voltage-divider";
 import { seriesResistanceFormSchema } from "@/lib/validation/series-resistance";
 import { parallelResistanceFormSchema } from "@/lib/validation/parallel-resistance";
 import { singlePhasePowerFormSchema } from "@/lib/validation/single-phase-power";
+import { threePhasePowerFormSchema } from "@/lib/validation/three-phase-power";
 import type { CalculationResult } from "./types";
 
 /**
@@ -113,6 +119,14 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     category: "AC Power",
     schema: singlePhasePowerFormSchema,
     calculate: calculateSinglePhasePower,
+  }),
+  defineCalculator<ThreePhasePowerInput, ThreePhasePowerResult>({
+    slug: "three-phase-power",
+    name: "3-Phase Power",
+    description: "Calculate real, apparent, or reactive power, or power factor, for balanced three-phase AC systems using line quantities.",
+    category: "AC Power",
+    schema: threePhasePowerFormSchema,
+    calculate: calculateThreePhasePower,
   }),
 ];
 

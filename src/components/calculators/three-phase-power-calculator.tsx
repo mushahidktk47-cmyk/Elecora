@@ -6,39 +6,39 @@ import { FormulaDisplay } from "@/components/engineering/formula-display";
 import { CalculatorField } from "@/components/engineering/calculator-field";
 import { ResultCard } from "@/components/engineering/result-card";
 import { WarningAlert } from "@/components/engineering/warning-alert";
+import { ThreePhaseDiagram } from "@/components/engineering/three-phase-diagram";
 import {
   realPowerFormSchema,
   apparentPowerFormSchema,
   reactivePowerFormSchema,
   powerFactorFormSchema,
-} from "@/lib/validation/single-phase-power";
-import { calculateSinglePhasePower } from "@/calculations/single-phase-power";
+} from "@/lib/validation/three-phase-power";
+import { calculateThreePhasePower } from "@/calculations/three-phase-power";
 
 type Mode = "real-power" | "apparent-power" | "reactive-power" | "power-factor";
 
 const modes: { id: Mode; label: string; formula: string }[] = [
-  { id: "real-power", label: "Real Power", formula: "P = V × I × PF" },
-  { id: "apparent-power", label: "Apparent Power", formula: "S = V × I" },
-  { id: "reactive-power", label: "Reactive Power", formula: "Q = V × I × √(1 − PF²)" },
+  { id: "real-power", label: "Real Power", formula: "P = √3 × VL × IL × PF" },
+  { id: "apparent-power", label: "Apparent Power", formula: "S = √3 × VL × IL" },
+  { id: "reactive-power", label: "Reactive Power", formula: "Q = √3 × VL × IL × √(1 − PF²)" },
   { id: "power-factor", label: "Power Factor", formula: "PF = P / S" },
 ];
 
 /**
- * Mode-based calculator: a segmented button group (not Tabs — this is a
- * calculator input choice, not page navigation) switches between four
- * distinct calculations, each with its own field set, validation
- * schema, and result. See src/calculations/single-phase-power.ts for
- * the locked formulas/domain rules.
+ * Mode-based calculator for balanced three-phase AC power, using line
+ * quantities only (VL, IL) — see three-phase-power.ts for the full
+ * locked rationale (why Wye/Delta selection isn't needed here, the
+ * balanced-only assumption, the lagging-only reactive power).
+ *
+ * Deliberately mirrors SinglePhasePowerCalculator's structure closely,
+ * sharing the ModeSelector component — the two calculators are meant
+ * to feel like siblings in the same product, not unrelated tools.
  */
-export function SinglePhasePowerCalculator() {
+export function ThreePhasePowerCalculator() {
   const [mode, setMode] = useState<Mode>("real-power");
 
-  // Separate field state per mode's inputs — switching modes doesn't
-  // reset unrelated fields (e.g. voltage/current are shared conceptually
-  // across modes 1-3, but kept independent here for simplicity and to
-  // avoid subtle cross-mode state bugs).
-  const [voltage, setVoltage] = useState("");
-  const [current, setCurrent] = useState("");
+  const [lineVoltage, setLineVoltage] = useState("");
+  const [lineCurrent, setLineCurrent] = useState("");
   const [powerFactor, setPowerFactor] = useState("");
   const [realPower, setRealPower] = useState("");
   const [apparentPower, setApparentPower] = useState("");
@@ -53,14 +53,16 @@ export function SinglePhasePowerCalculator() {
     | ReturnType<typeof powerFactorFormSchema.safeParse>;
 
   if (mode === "real-power") {
-    allFilled = voltage.trim() !== "" && current.trim() !== "" && powerFactor.trim() !== "";
-    parsed = realPowerFormSchema.safeParse({ mode, voltage, current, powerFactor });
+    allFilled =
+      lineVoltage.trim() !== "" && lineCurrent.trim() !== "" && powerFactor.trim() !== "";
+    parsed = realPowerFormSchema.safeParse({ mode, lineVoltage, lineCurrent, powerFactor });
   } else if (mode === "apparent-power") {
-    allFilled = voltage.trim() !== "" && current.trim() !== "";
-    parsed = apparentPowerFormSchema.safeParse({ mode, voltage, current });
+    allFilled = lineVoltage.trim() !== "" && lineCurrent.trim() !== "";
+    parsed = apparentPowerFormSchema.safeParse({ mode, lineVoltage, lineCurrent });
   } else if (mode === "reactive-power") {
-    allFilled = voltage.trim() !== "" && current.trim() !== "" && powerFactor.trim() !== "";
-    parsed = reactivePowerFormSchema.safeParse({ mode, voltage, current, powerFactor });
+    allFilled =
+      lineVoltage.trim() !== "" && lineCurrent.trim() !== "" && powerFactor.trim() !== "";
+    parsed = reactivePowerFormSchema.safeParse({ mode, lineVoltage, lineCurrent, powerFactor });
   } else {
     allFilled = realPower.trim() !== "" && apparentPower.trim() !== "";
     parsed = powerFactorFormSchema.safeParse({ mode, realPower, apparentPower });
@@ -74,42 +76,48 @@ export function SinglePhasePowerCalculator() {
     }
   }
 
-  const result = parsed.success ? calculateSinglePhasePower(parsed.data) : undefined;
+  const result = parsed.success ? calculateThreePhasePower(parsed.data) : undefined;
   const isZeroPowerFactorResult =
     result?.success && result.data.label === "Power Factor" && result.data.value === 0;
 
   return (
     <div className="flex flex-col gap-6">
-      <FormulaDisplay label="Single-Phase AC Power" formula={activeModeInfo.formula} />
+      <FormulaDisplay label="Three-Phase AC Power" formula={activeModeInfo.formula} />
 
-      <p className="text-sm text-muted-foreground">
-        Assumption: this calculator uses RMS voltage and RMS current for
-        single-phase sinusoidal AC systems. Reactive Power assumes a
-        lagging (inductive) power factor — leading/capacitive loads are
-        not yet supported.
-      </p>
+      <div className="flex flex-col items-start gap-6 sm:flex-row">
+        <ThreePhaseDiagram className="mx-auto sm:mx-0" />
+        <p className="text-sm text-muted-foreground">
+          Assumption: this calculator models a <strong>balanced</strong>{" "}
+          three-phase system using line-to-line voltage (VL) and line
+          current (IL). Because these formulas use only line
+          quantities, the result is the same whether the load is
+          Wye- or Delta-connected — the connection type doesn&apos;t
+          need to be specified. Reactive Power assumes a lagging
+          (inductive) power factor.
+        </p>
+      </div>
 
       <ModeSelector modes={modes} value={mode} onChange={setMode} aria-label="Calculation mode" />
 
       {mode === "real-power" || mode === "reactive-power" ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <CalculatorField
-            id="voltage"
-            label="RMS Voltage"
+            id="lineVoltage"
+            label="Line-to-Line Voltage (VL)"
             unit="V"
-            value={voltage}
-            onChange={setVoltage}
-            placeholder="e.g. 230"
-            error={fieldErrors.voltage}
+            value={lineVoltage}
+            onChange={setLineVoltage}
+            placeholder="e.g. 400"
+            error={fieldErrors.lineVoltage}
           />
           <CalculatorField
-            id="current"
-            label="RMS Current"
+            id="lineCurrent"
+            label="Line Current (IL)"
             unit="A"
-            value={current}
-            onChange={setCurrent}
+            value={lineCurrent}
+            onChange={setLineCurrent}
             placeholder="e.g. 10"
-            error={fieldErrors.current}
+            error={fieldErrors.lineCurrent}
           />
           <CalculatorField
             id="powerFactor"
@@ -124,22 +132,22 @@ export function SinglePhasePowerCalculator() {
       ) : mode === "apparent-power" ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <CalculatorField
-            id="voltage"
-            label="RMS Voltage"
+            id="lineVoltage"
+            label="Line-to-Line Voltage (VL)"
             unit="V"
-            value={voltage}
-            onChange={setVoltage}
-            placeholder="e.g. 230"
-            error={fieldErrors.voltage}
+            value={lineVoltage}
+            onChange={setLineVoltage}
+            placeholder="e.g. 400"
+            error={fieldErrors.lineVoltage}
           />
           <CalculatorField
-            id="current"
-            label="RMS Current"
+            id="lineCurrent"
+            label="Line Current (IL)"
             unit="A"
-            value={current}
-            onChange={setCurrent}
+            value={lineCurrent}
+            onChange={setLineCurrent}
             placeholder="e.g. 10"
-            error={fieldErrors.current}
+            error={fieldErrors.lineCurrent}
           />
         </div>
       ) : (
@@ -150,7 +158,7 @@ export function SinglePhasePowerCalculator() {
             unit="W"
             value={realPower}
             onChange={setRealPower}
-            placeholder="e.g. 1840"
+            placeholder="e.g. 5543"
             error={fieldErrors.realPower}
           />
           <CalculatorField
@@ -159,7 +167,7 @@ export function SinglePhasePowerCalculator() {
             unit="VA"
             value={apparentPower}
             onChange={setApparentPower}
-            placeholder="e.g. 2300"
+            placeholder="e.g. 6928"
             error={fieldErrors.apparentPower}
           />
         </div>
