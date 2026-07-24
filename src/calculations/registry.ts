@@ -109,7 +109,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
   defineCalculator<SinglePhasePowerInput, SinglePhasePowerResult>({
     slug: "single-phase-power",
     name: "1-Phase Power",
-    description: "Calculate real power for single-phase AC systems using RMS values and power factor.",
+    description: "Calculate real, apparent, or reactive power, or power factor, for single-phase AC systems.",
     category: "AC Power",
     schema: singlePhasePowerFormSchema,
     calculate: calculateSinglePhasePower,

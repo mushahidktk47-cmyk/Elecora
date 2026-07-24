@@ -11,6 +11,7 @@ export type CalculationErrorCode =
   | "DIVISION_BY_ZERO"
   | "ZERO_NOT_ALLOWED"
   | "OUT_OF_RANGE"
+  | "REAL_POWER_EXCEEDS_APPARENT_POWER"
   | "INVALID_INPUT";
 
 export interface CalculationSuccess<T> {
