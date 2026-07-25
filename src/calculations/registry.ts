@@ -26,6 +26,11 @@ import {
   type ThreePhasePowerInput,
   type ThreePhasePowerResult,
 } from "./three-phase-power";
+import {
+  calculateResistorColorCode,
+  type ResistorColorCodeInput,
+  type ResistorColorCodeResult,
+} from "./resistor-color-code/resistor-color-code";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
 import { powerFormSchema } from "@/lib/validation/power";
 import { voltageDividerFormSchema } from "@/lib/validation/voltage-divider";
@@ -33,6 +38,7 @@ import { seriesResistanceFormSchema } from "@/lib/validation/series-resistance";
 import { parallelResistanceFormSchema } from "@/lib/validation/parallel-resistance";
 import { singlePhasePowerFormSchema } from "@/lib/validation/single-phase-power";
 import { threePhasePowerFormSchema } from "@/lib/validation/three-phase-power";
+import { resistorColorCodeFormSchema } from "@/lib/validation/resistor-color-code";
 import type { CalculationResult } from "./types";
 
 /**
@@ -127,6 +133,14 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     category: "AC Power",
     schema: threePhasePowerFormSchema,
     calculate: calculateThreePhasePower,
+  }),
+  defineCalculator<ResistorColorCodeInput, ResistorColorCodeResult>({
+    slug: "resistor-color-code",
+    name: "Resistor Color Code",
+    description: "Decode 4-band and 5-band resistor color codes, or find the color bands for a target resistance.",
+    category: "Components",
+    schema: resistorColorCodeFormSchema,
+    calculate: calculateResistorColorCode,
   }),
 ];
 

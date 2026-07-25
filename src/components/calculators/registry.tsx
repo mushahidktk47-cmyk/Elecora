@@ -6,6 +6,7 @@ import { SeriesResistanceCalculator } from "./series-resistance-calculator";
 import { ParallelResistanceCalculator } from "./parallel-resistance-calculator";
 import { SinglePhasePowerCalculator } from "./single-phase-power-calculator";
 import { ThreePhasePowerCalculator } from "./three-phase-power-calculator";
+import { ResistorColorCodeCalculator } from "./resistor-color-code-calculator";
 
 /**
  * Maps a calculator's slug to its React UI component. Deliberately kept
@@ -20,4 +21,5 @@ export const calculatorComponents: Record<string, ComponentType> = {
   "parallel-resistance": ParallelResistanceCalculator,
   "single-phase-power": SinglePhasePowerCalculator,
   "three-phase-power": ThreePhasePowerCalculator,
+  "resistor-color-code": ResistorColorCodeCalculator,
 };

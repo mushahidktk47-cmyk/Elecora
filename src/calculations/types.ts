@@ -12,6 +12,7 @@ export type CalculationErrorCode =
   | "ZERO_NOT_ALLOWED"
   | "OUT_OF_RANGE"
   | "REAL_POWER_EXCEEDS_APPARENT_POWER"
+  | "INVALID_BAND_COLOR"
   | "INVALID_INPUT";
 
 export interface CalculationSuccess<T> {
