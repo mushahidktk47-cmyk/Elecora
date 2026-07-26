@@ -31,6 +31,7 @@ import {
   type ResistorColorCodeInput,
   type ResistorColorCodeResult,
 } from "./resistor-color-code/resistor-color-code";
+import { calculateImpedance, type ImpedanceInput, type ImpedanceResult } from "./impedance";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
 import { powerFormSchema } from "@/lib/validation/power";
 import { voltageDividerFormSchema } from "@/lib/validation/voltage-divider";
@@ -39,6 +40,7 @@ import { parallelResistanceFormSchema } from "@/lib/validation/parallel-resistan
 import { singlePhasePowerFormSchema } from "@/lib/validation/single-phase-power";
 import { threePhasePowerFormSchema } from "@/lib/validation/three-phase-power";
 import { resistorColorCodeFormSchema } from "@/lib/validation/resistor-color-code";
+import { impedanceFormSchema } from "@/lib/validation/impedance";
 import type { CalculationResult } from "./types";
 
 /**
@@ -141,6 +143,14 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     category: "Components",
     schema: resistorColorCodeFormSchema,
     calculate: calculateResistorColorCode,
+  }),
+  defineCalculator<ImpedanceInput, ImpedanceResult>({
+    slug: "impedance",
+    name: "Impedance",
+    description: "Calculate series RLC impedance with resonance detection, or find magnitude and phase from R and X directly.",
+    category: "AC Circuits",
+    schema: impedanceFormSchema,
+    calculate: calculateImpedance,
   }),
 ];
 
