@@ -3,10 +3,19 @@ import { buttonVariants } from "@/components/ui/button";
 import { Container } from "@/components/marketing/container";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { CalculatorPreviewCard } from "@/components/marketing/calculator-preview-card";
-import { popularCalculators } from "@/lib/placeholder-data";
+import { calculatorRegistry } from "@/calculations/registry";
 import { cn } from "@/lib/utils";
 
+// Show the first few calculators from the real registry — the registry
+// order reflects build/introduction order, which doubles as a reasonable
+// "foundational first" ordering for a preview. No fabricated usage
+// stats, no manual curation to keep in sync — this list now updates
+// itself whenever the registry changes.
+const PREVIEW_COUNT = 6;
+
 export function PopularCalculators() {
+  const previewCalculators = calculatorRegistry.slice(0, PREVIEW_COUNT);
+
   return (
     <section className="border-b border-border py-16">
       <Container className="flex flex-col gap-8">
@@ -24,7 +33,7 @@ export function PopularCalculators() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {popularCalculators.map((calculator) => (
+          {previewCalculators.map((calculator) => (
             <CalculatorPreviewCard key={calculator.slug} calculator={calculator} />
           ))}
         </div>

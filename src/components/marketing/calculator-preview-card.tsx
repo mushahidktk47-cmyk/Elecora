@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import type { PlaceholderCalculator } from "@/lib/placeholder-data";
 
 interface CalculatorPreviewCardProps {
-  calculator: PlaceholderCalculator;
+  calculator: {
+    name: string;
+    slug: string;
+    description: string;
+  };
 }
 
 export function CalculatorPreviewCard({ calculator }: CalculatorPreviewCardProps) {

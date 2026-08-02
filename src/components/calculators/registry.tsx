@@ -8,6 +8,7 @@ import { SinglePhasePowerCalculator } from "./single-phase-power-calculator";
 import { ThreePhasePowerCalculator } from "./three-phase-power-calculator";
 import { ResistorColorCodeCalculator } from "./resistor-color-code-calculator";
 import { ImpedanceCalculator } from "./impedance-calculator";
+import { UnitConverterCalculator } from "./unit-converter-calculator";
 
 /**
  * Maps a calculator's slug to its React UI component. Deliberately kept
@@ -24,4 +25,5 @@ export const calculatorComponents: Record<string, ComponentType> = {
   "three-phase-power": ThreePhasePowerCalculator,
   "resistor-color-code": ResistorColorCodeCalculator,
   impedance: ImpedanceCalculator,
+  "unit-converter": UnitConverterCalculator,
 };

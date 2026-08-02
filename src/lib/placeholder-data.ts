@@ -1,49 +1,13 @@
 /**
- * PLACEHOLDER DATA — Phase 3 (Home Page) only.
+ * PLACEHOLDER DATA.
  *
- * These lists exist so the homepage has something real to display before
- * the actual calculator engine (Phase 4) and Learn content system exist.
- * No usage counts, ratings, or other fabricated stats are included here —
- * only names and the routes they'll eventually link to.
- *
- * Once Phase 4+ builds real calculators/content, this file should be
- * replaced by data pulled from the actual calculator registry / content
- * system, not extended further.
+ * As of Phase 0 (post-MVP audit), popular-calculator data now comes
+ * directly from the real calculator registry (src/calculations/registry.ts)
+ * — see src/components/marketing/popular-calculators.tsx. Only
+ * `learnPreview` remains here, since the Learn content system genuinely
+ * doesn't exist yet — there is no real data to point to until it's built.
+ * Once Learn ships, this file should be removed entirely.
  */
-
-export interface PlaceholderCalculator {
-  name: string;
-  slug: string;
-  description: string;
-}
-
-export const popularCalculators: PlaceholderCalculator[] = [
-  {
-    name: "Ohm's Law",
-    slug: "ohms-law",
-    description: "Find voltage, current, or resistance.",
-  },
-  {
-    name: "Voltage Divider",
-    slug: "voltage-divider",
-    description: "Calculate output voltage across two resistors.",
-  },
-  {
-    name: "Electrical Power",
-    slug: "power",
-    description: "Solve using P = VI, P = I²R, or P = V²/R.",
-  },
-  {
-    name: "Resistor Color Code",
-    slug: "resistor-color-code",
-    description: "Decode resistance values from color bands.",
-  },
-  {
-    name: "Series Resistance",
-    slug: "series-resistance",
-    description: "Combine resistors connected in series.",
-  },
-];
 
 export interface PlaceholderLearnTopic {
   title: string;

@@ -32,6 +32,7 @@ import {
   type ResistorColorCodeResult,
 } from "./resistor-color-code/resistor-color-code";
 import { calculateImpedance, type ImpedanceInput, type ImpedanceResult } from "./impedance";
+import { convertUnits, type UnitConverterInput, type UnitConverterResult } from "./unit-converter";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
 import { powerFormSchema } from "@/lib/validation/power";
 import { voltageDividerFormSchema } from "@/lib/validation/voltage-divider";
@@ -41,6 +42,7 @@ import { singlePhasePowerFormSchema } from "@/lib/validation/single-phase-power"
 import { threePhasePowerFormSchema } from "@/lib/validation/three-phase-power";
 import { resistorColorCodeFormSchema } from "@/lib/validation/resistor-color-code";
 import { impedanceFormSchema } from "@/lib/validation/impedance";
+import { unitConverterFormSchema } from "@/lib/validation/unit-converter";
 import type { CalculationResult } from "./types";
 
 /**
@@ -151,6 +153,14 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     category: "AC Circuits",
     schema: impedanceFormSchema,
     calculate: calculateImpedance,
+  }),
+  defineCalculator<UnitConverterInput, UnitConverterResult>({
+    slug: "unit-converter",
+    name: "Unit Converter",
+    description: "Convert electrical quantities across standard SI prefixes.",
+    category: "Reference",
+    schema: unitConverterFormSchema,
+    calculate: convertUnits,
   }),
 ];
 
