@@ -10,6 +10,7 @@ import { WarningAlert } from "@/components/engineering/warning-alert";
 import { ImpedanceTriangleDiagram } from "@/components/engineering/impedance-triangle-diagram";
 import { impedanceFormSchema } from "@/lib/validation/impedance";
 import { calculateImpedance } from "@/calculations/impedance";
+import { useReportCalculation } from "./current-calculation-context";
 
 type Mode = "series" | "direct";
 
@@ -68,6 +69,7 @@ export function ImpedanceCalculator() {
   const readyToCalculate = mode === "series" ? anySeriesFieldFilled : directFieldsFilled;
 
   const result = parsed.success && readyToCalculate ? calculateImpedance(parsed.data) : undefined;
+  useReportCalculation(parsed.success && readyToCalculate ? parsed.data : undefined, Boolean(result?.success));
 
   return (
     <div className="flex flex-col gap-6">

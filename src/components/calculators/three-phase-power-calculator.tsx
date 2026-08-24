@@ -14,6 +14,7 @@ import {
   powerFactorFormSchema,
 } from "@/lib/validation/three-phase-power";
 import { calculateThreePhasePower } from "@/calculations/three-phase-power";
+import { useReportCalculation } from "./current-calculation-context";
 
 type Mode = "real-power" | "apparent-power" | "reactive-power" | "power-factor";
 
@@ -77,6 +78,7 @@ export function ThreePhasePowerCalculator() {
   }
 
   const result = parsed.success ? calculateThreePhasePower(parsed.data) : undefined;
+  useReportCalculation(parsed.success ? parsed.data : undefined, Boolean(result?.success));
   const isZeroPowerFactorResult =
     result?.success && result.data.label === "Power Factor" && result.data.value === 0;
 

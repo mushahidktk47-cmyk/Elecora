@@ -9,6 +9,7 @@ import { ResultCard } from "@/components/engineering/result-card";
 import { WarningAlert } from "@/components/engineering/warning-alert";
 import { numericResistorField } from "@/lib/validation/parallel-resistance";
 import { calculateParallelResistance } from "@/calculations/parallel-resistance";
+import { useReportCalculation } from "./current-calculation-context";
 
 const MIN_RESISTORS = 2;
 
@@ -50,12 +51,15 @@ export function ParallelResistanceCalculator() {
 
   const allFilled = rowResults.every((r) => r.parsed.success && r.parsed.data !== undefined);
 
+  const parallelInput = {
+    resistances: rowResults.map((r) => (r.parsed.success ? (r.parsed.data as number) : 0)),
+  };
+
   const result =
     allFilled && rows.length >= MIN_RESISTORS
-      ? calculateParallelResistance({
-          resistances: rowResults.map((r) => (r.parsed.success ? (r.parsed.data as number) : 0)),
-        })
+      ? calculateParallelResistance(parallelInput)
       : undefined;
+  useReportCalculation(allFilled ? parallelInput : undefined, Boolean(result?.success));
 
   return (
     <div className="flex flex-col gap-6">

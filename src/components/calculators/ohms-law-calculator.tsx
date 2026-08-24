@@ -7,6 +7,7 @@ import { ResultCard } from "@/components/engineering/result-card";
 import { WarningAlert } from "@/components/engineering/warning-alert";
 import { ohmsLawFormSchema } from "@/lib/validation/ohms-law";
 import { calculateOhmsLaw } from "@/calculations/ohms-law";
+import { useReportCalculation } from "./current-calculation-context";
 
 const resultLabels = {
   voltage: "Voltage",
@@ -38,6 +39,7 @@ export function OhmsLawCalculator() {
   }
 
   const result = parsed.success && filledCount === 2 ? calculateOhmsLaw(parsed.data) : undefined;
+  useReportCalculation(parsed.success ? parsed.data : undefined, Boolean(result?.success));
 
   return (
     <div className="flex flex-col gap-6">

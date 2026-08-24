@@ -8,6 +8,7 @@ import { WarningAlert } from "@/components/engineering/warning-alert";
 import { VoltageDividerDiagram } from "@/components/engineering/voltage-divider-diagram";
 import { voltageDividerFormSchema } from "@/lib/validation/voltage-divider";
 import { calculateVoltageDivider } from "@/calculations/voltage-divider";
+import { useReportCalculation } from "./current-calculation-context";
 
 /**
  * Unlike Ohm's Law/Power, all three inputs are always required — this
@@ -33,6 +34,7 @@ export function VoltageDividerCalculator() {
   }
 
   const result = parsed.success ? calculateVoltageDivider(parsed.data) : undefined;
+  useReportCalculation(parsed.success ? parsed.data : undefined, Boolean(result?.success));
 
   return (
     <div className="flex flex-col gap-6">

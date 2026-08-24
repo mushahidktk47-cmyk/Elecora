@@ -7,6 +7,7 @@ import { ResultCard } from "@/components/engineering/result-card";
 import { WarningAlert } from "@/components/engineering/warning-alert";
 import { powerFormSchema } from "@/lib/validation/power";
 import { calculatePower } from "@/calculations/power";
+import { useReportCalculation } from "./current-calculation-context";
 
 /**
  * Unlike Ohm's Law (solve for any 1 of 3), Power always solves FOR
@@ -43,6 +44,7 @@ export function PowerCalculator() {
   }
 
   const result = parsed.success && filledCount === 2 ? calculatePower(parsed.data) : undefined;
+  useReportCalculation(parsed.success ? parsed.data : undefined, Boolean(result?.success));
 
   return (
     <div className="flex flex-col gap-6">

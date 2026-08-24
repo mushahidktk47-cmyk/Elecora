@@ -60,6 +60,15 @@ export interface CalculatorDefinition {
   name: string;
   description: string;
   category: string;
+  /**
+   * Lightweight, deliberately non-semver version stamp. Bump this by
+   * hand whenever a calculator's formula, validation rules, or output
+   * shape meaningfully changes. Stamped onto each saved calculation at
+   * save time so a historical result can be traced to the exact
+   * calculator behavior that produced it — see the Workspace v1a
+   * architecture review for the full reasoning.
+   */
+  calculatorVersion: number;
   schema: z.ZodTypeAny;
   calculate: (input: unknown) => CalculationResult<unknown>;
 }
@@ -75,6 +84,7 @@ function defineCalculator<TInput, TResult>(definition: {
   name: string;
   description: string;
   category: string;
+  calculatorVersion: number;
   schema: z.ZodType<TInput>;
   calculate: (input: TInput) => CalculationResult<TResult>;
 }): CalculatorDefinition {
@@ -87,6 +97,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "Ohm's Law",
     description: "Solve for voltage, current, or resistance.",
     category: "Basic Circuits",
+    calculatorVersion: 1,
     schema: ohmsLawFormSchema,
     calculate: calculateOhmsLaw,
   }),
@@ -95,6 +106,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "Electrical Power",
     description: "Solve for power using P = VI, P = I²R, or P = V²/R.",
     category: "Basic Circuits",
+    calculatorVersion: 1,
     schema: powerFormSchema,
     calculate: calculatePower,
   }),
@@ -103,6 +115,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "Voltage Divider",
     description: "Calculate output voltage across two resistors.",
     category: "Basic Circuits",
+    calculatorVersion: 1,
     schema: voltageDividerFormSchema,
     calculate: calculateVoltageDivider,
   }),
@@ -111,6 +124,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "Series Resistance",
     description: "Combine resistors connected in series.",
     category: "Basic Circuits",
+    calculatorVersion: 1,
     schema: seriesResistanceFormSchema,
     calculate: calculateSeriesResistance,
   }),
@@ -119,6 +133,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "Parallel Resistance",
     description: "Combine resistors connected in parallel.",
     category: "Basic Circuits",
+    calculatorVersion: 1,
     schema: parallelResistanceFormSchema,
     calculate: calculateParallelResistance,
   }),
@@ -127,6 +142,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "1-Phase Power",
     description: "Calculate real, apparent, or reactive power, or power factor, for single-phase AC systems.",
     category: "AC Power",
+    calculatorVersion: 1,
     schema: singlePhasePowerFormSchema,
     calculate: calculateSinglePhasePower,
   }),
@@ -135,6 +151,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "3-Phase Power",
     description: "Calculate real, apparent, or reactive power, or power factor, for balanced three-phase AC systems using line quantities.",
     category: "AC Power",
+    calculatorVersion: 1,
     schema: threePhasePowerFormSchema,
     calculate: calculateThreePhasePower,
   }),
@@ -143,6 +160,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "Resistor Color Code",
     description: "Decode 4-band and 5-band resistor color codes, or find the color bands for a target resistance.",
     category: "Components",
+    calculatorVersion: 1,
     schema: resistorColorCodeFormSchema,
     calculate: calculateResistorColorCode,
   }),
@@ -151,6 +169,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "Impedance",
     description: "Calculate series RLC impedance with resonance detection, or find magnitude and phase from R and X directly.",
     category: "AC Circuits",
+    calculatorVersion: 1,
     schema: impedanceFormSchema,
     calculate: calculateImpedance,
   }),
@@ -159,6 +178,7 @@ export const calculatorRegistry: CalculatorDefinition[] = [
     name: "Unit Converter",
     description: "Convert electrical quantities across standard SI prefixes.",
     category: "Reference",
+    calculatorVersion: 1,
     schema: unitConverterFormSchema,
     calculate: convertUnits,
   }),

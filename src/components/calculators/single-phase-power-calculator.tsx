@@ -13,6 +13,7 @@ import {
   powerFactorFormSchema,
 } from "@/lib/validation/single-phase-power";
 import { calculateSinglePhasePower } from "@/calculations/single-phase-power";
+import { useReportCalculation } from "./current-calculation-context";
 
 type Mode = "real-power" | "apparent-power" | "reactive-power" | "power-factor";
 
@@ -75,6 +76,7 @@ export function SinglePhasePowerCalculator() {
   }
 
   const result = parsed.success ? calculateSinglePhasePower(parsed.data) : undefined;
+  useReportCalculation(parsed.success ? parsed.data : undefined, Boolean(result?.success));
   const isZeroPowerFactorResult =
     result?.success && result.data.label === "Power Factor" && result.data.value === 0;
 

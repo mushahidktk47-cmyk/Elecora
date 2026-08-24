@@ -20,6 +20,7 @@ import {
 import { TOLERANCE_DEFINITIONS } from "@/calculations/resistor-color-code/e-series";
 import { calculateResistorColorCode } from "@/calculations/resistor-color-code/resistor-color-code";
 import { resistorColorCodeFormSchema } from "@/lib/validation/resistor-color-code";
+import { useReportCalculation } from "./current-calculation-context";
 import { cn } from "@/lib/utils";
 
 type Mode = "decode" | "reverse-lookup";
@@ -127,6 +128,14 @@ export function ResistorColorCodeCalculator() {
     reverseParsed && reverseParsed.success ? calculateResistorColorCode(reverseParsed.data) : undefined;
 
   const activeResult = mode === "decode" ? decodeResult : reverseResult;
+
+  const activeInput =
+    mode === "decode"
+      ? { mode: "decode" as const, bandCount, colors: decodeColors }
+      : reverseParsed?.success
+        ? reverseParsed.data
+        : undefined;
+  useReportCalculation(activeInput, Boolean(activeResult?.success));
 
   // Diagram bands: for decode mode, reflect live editable colors. For
   // reverse-lookup mode, reflect the computed bands (display-only —

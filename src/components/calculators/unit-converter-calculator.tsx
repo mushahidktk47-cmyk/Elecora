@@ -7,6 +7,7 @@ import { CalculatorField } from "@/components/engineering/calculator-field";
 import { UnitLabel } from "@/components/engineering/unit-label";
 import { Card, CardContent } from "@/components/ui/card";
 import { unitConverterFormSchema } from "@/lib/validation/unit-converter";
+import { useReportCalculation } from "./current-calculation-context";
 import {
   convertUnits,
   UNIT_QUANTITIES,
@@ -43,6 +44,7 @@ export function UnitConverterCalculator() {
       : undefined;
 
   const result = parsed.success ? convertUnits(parsed.data) : undefined;
+  useReportCalculation(parsed.success ? parsed.data : undefined, Boolean(result?.success));
 
   return (
     <div className="flex flex-col gap-6">

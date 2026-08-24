@@ -9,6 +9,7 @@ import { ResultCard } from "@/components/engineering/result-card";
 import { WarningAlert } from "@/components/engineering/warning-alert";
 import { numericResistorField } from "@/lib/validation/series-resistance";
 import { calculateSeriesResistance } from "@/calculations/series-resistance";
+import { useReportCalculation } from "./current-calculation-context";
 
 const MIN_RESISTORS = 2;
 
@@ -52,12 +53,13 @@ export function SeriesResistanceCalculator() {
 
   const allFilled = rowResults.every((r) => r.parsed.success && r.parsed.data !== undefined);
 
+  const seriesInput = {
+    resistances: rowResults.map((r) => (r.parsed.success ? (r.parsed.data as number) : 0)),
+  };
+
   const result =
-    allFilled && rows.length >= MIN_RESISTORS
-      ? calculateSeriesResistance({
-          resistances: rowResults.map((r) => (r.parsed.success ? (r.parsed.data as number) : 0)),
-        })
-      : undefined;
+    allFilled && rows.length >= MIN_RESISTORS ? calculateSeriesResistance(seriesInput) : undefined;
+  useReportCalculation(allFilled ? seriesInput : undefined, Boolean(result?.success));
 
   return (
     <div className="flex flex-col gap-6">
