@@ -1,41 +1,48 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { signOut } from "@/lib/supabase/auth-actions";
 import { cn } from "@/lib/utils";
 
 /**
- * Signed-in / signed-out controls for the navbar. The navbar itself
- * is a client component, but it cannot know the auth state on first
- * render — the session lives in cookies the browser client reads
- * after mount, so this checks getUser() once and subscribes to
- * auth changes. While it is still checking, it renders nothing, so
- * a signed-in user never briefly sees "Log in / Sign up".
+ * Signed-in / signed-out controls for the navbar.
+ *
+ * The signed-in answer comes from the server (SiteLayout reads the
+ * session cookies and passes isSignedIn down). The first version let
+ * this component check auth itself in the browser after mount, and
+ * it kept showing "Log in / Sign up" after a successful login,
+ * because the client navigation after login did not re-run that
+ * check. Now the server re-checks on every render — including
+ * router.refresh() after login — and this component renders the
+ * prop directly. The auth subscription below only asks the server
+ * to re-render when the session changes in this tab.
  *
  * "My Calculations" is here (not just in the nav links) because
  * /saved had no link anywhere in the navbar before — the only way
  * to reach it was after saving, or from /blocks.
  */
-export function AuthNav({ onNavigate }: { onNavigate?: () => void }) {
-  const [state, setState] = useState<"checking" | "signed-in" | "signed-out">("checking");
+export function AuthNav({
+  isSignedIn,
+  onNavigate,
+}: {
+  isSignedIn: boolean;
+  onNavigate?: () => void;
+}) {
+  const router = useRouter();
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setState(data.user ? "signed-in" : "signed-out");
-    });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setState(session ? "signed-in" : "signed-out");
+    const { data: listener } = supabase.auth.onAuthStateChange(() => {
+      router.refresh();
     });
     return () => listener.subscription.unsubscribe();
-  }, []);
+  }, [router]);
 
-  if (state === "checking") return null;
-
-  if (state === "signed-in") {
+  if (isSignedIn) {
     return (
       <>
         <Link

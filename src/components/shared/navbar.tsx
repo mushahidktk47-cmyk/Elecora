@@ -22,7 +22,7 @@ const navLinks = [
  * kept dependency-free since a full modal isn't needed for a simple
  * link list. Revisit if the mobile nav grows more complex.
  */
-export function Navbar() {
+export function Navbar({ isSignedIn }: { isSignedIn: boolean }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -47,7 +47,7 @@ export function Navbar() {
 
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
-          <AuthNav />
+          <AuthNav isSignedIn={isSignedIn} />
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
@@ -79,7 +79,7 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
-              <AuthNav onNavigate={() => setMobileOpen(false)} />
+              <AuthNav isSignedIn={isSignedIn} onNavigate={() => setMobileOpen(false)} />
             </div>
           </Container>
         </nav>
