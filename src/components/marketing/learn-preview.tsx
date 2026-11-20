@@ -26,16 +26,24 @@ export function LearnPreview() {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {learnPreview.map((topic) => (
-            <Link key={topic.slug} href={`/learn/${topic.slug}`} className="group block">
-              <Card className="h-full transition-colors group-hover:border-primary/50">
+            // Not links: the /learn/[slug] lesson pages do not exist yet.
+            // These were links before and every one of them 404'd. They
+            // become links again once the lessons are built.
+            <div key={topic.slug}>
+              <Card className="h-full">
                 <CardHeader className="gap-2">
-                  <Badge variant="outline" className="w-fit">
-                    {topic.kind}
-                  </Badge>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="w-fit">
+                      {topic.kind}
+                    </Badge>
+                    <Badge variant="secondary" className="w-fit">
+                      Coming soon
+                    </Badge>
+                  </div>
                   <CardTitle className="text-base">{topic.title}</CardTitle>
                 </CardHeader>
               </Card>
-            </Link>
+            </div>
           ))}
         </div>
       </Container>

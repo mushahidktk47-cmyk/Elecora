@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -9,8 +10,11 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   signInWithPassword,
   signUpWithPassword,
-  signInWithGoogle,
 } from "@/lib/supabase/auth-actions";
+// Note: Google sign-in is hidden for now, not deleted. The Google
+// provider is disabled in Supabase, so the "Continue with Google"
+// button always failed. signInWithGoogle() in auth-actions.ts is
+// still there — bring the button back once Google is enabled there.
 
 interface AuthFormProps {
   mode: "login" | "signup";
@@ -50,17 +54,6 @@ export function AuthForm({ mode }: AuthFormProps) {
     });
   }
 
-  function handleGoogleSignIn() {
-    startTransition(async () => {
-      const result = await signInWithGoogle(next);
-      if (result.error || !result.url) {
-        setError(result.error ?? "Could not start Google sign-in.");
-        return;
-      }
-      window.location.href = result.url;
-    });
-  }
-
   if (signupComplete) {
     return (
       <Alert>
@@ -73,22 +66,6 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handleGoogleSignIn}
-        disabled={isPending}
-        className="w-full"
-      >
-        Continue with Google
-      </Button>
-
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <div className="h-px flex-1 bg-border" />
-        or
-        <div className="h-px flex-1 bg-border" />
-      </div>
-
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="email">Email</Label>
@@ -124,6 +101,14 @@ export function AuthForm({ mode }: AuthFormProps) {
           {isPending ? "Please wait…" : mode === "login" ? "Log in" : "Sign up"}
         </Button>
       </form>
+      {mode === "login" ? (
+        <p className="text-center text-sm text-muted-foreground">
+          Forgot your password?{" "}
+          <Link href="/forgot-password" className="font-medium text-primary hover:underline">
+            Reset it
+          </Link>
+        </p>
+      ) : null}
     </div>
   );
 }

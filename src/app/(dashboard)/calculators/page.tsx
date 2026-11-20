@@ -8,8 +8,7 @@ export default function CalculatorsPage() {
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">Calculators</h1>
         <p className="text-muted-foreground">
-          More calculators are added regularly — this list grows with the
-          registry in src/calculations/registry.ts.
+          More calculators are added regularly.
         </p>
       </div>
 

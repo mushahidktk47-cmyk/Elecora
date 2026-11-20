@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, Zap } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { AuthNav } from "@/components/shared/auth-nav";
 import { Container } from "@/components/marketing/container";
-import { cn } from "@/lib/utils";
 
 const navLinks = [
   { label: "Calculators", href: "/calculators" },
@@ -47,12 +47,7 @@ export function Navbar() {
 
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
-          <Link href="/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
-            Log in
-          </Link>
-          <Link href="/signup" className={cn(buttonVariants({ size: "sm" }))}>
-            Sign up
-          </Link>
+          <AuthNav />
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
@@ -84,20 +79,7 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
-              <Link
-                href="/login"
-                className={cn(buttonVariants({ variant: "outline" }))}
-                onClick={() => setMobileOpen(false)}
-              >
-                Log in
-              </Link>
-              <Link
-                href="/signup"
-                className={cn(buttonVariants({}))}
-                onClick={() => setMobileOpen(false)}
-              >
-                Sign up
-              </Link>
+              <AuthNav onNavigate={() => setMobileOpen(false)} />
             </div>
           </Container>
         </nav>

@@ -42,3 +42,21 @@ export async function signOut(): Promise<void> {
   revalidatePath("/", "layout");
   redirect("/");
 }
+
+export async function requestPasswordReset(email: string): Promise<AuthActionResult> {
+  const supabase = await createClient();
+  // Always report success, even if the email is not registered — so
+  // the response cannot be used to check whether an email has an account.
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/reset-password`,
+  });
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+export async function updatePassword(newPassword: string): Promise<AuthActionResult> {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
